@@ -1,7 +1,7 @@
 ﻿using System;
 namespace susunkuliah
 {
-    public class EmptyClass
+    public class DefaultListDict<Type, >
     {
         public EmptyClass()
         {

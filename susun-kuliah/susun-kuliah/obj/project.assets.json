@@ -670,11 +670,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/ahmadizzan/Projects/susun-kuliah/susun-kuliah/susun-kuliah.csproj",
+      "projectUniqueName": "/Users/ahmadizzan/Code/stima/tubes2/susun-kuliah/susun-kuliah/susun-kuliah.csproj",
       "projectName": "susun-kuliah",
-      "projectPath": "/Users/ahmadizzan/Projects/susun-kuliah/susun-kuliah/susun-kuliah.csproj",
+      "projectPath": "/Users/ahmadizzan/Code/stima/tubes2/susun-kuliah/susun-kuliah/susun-kuliah.csproj",
       "packagesPath": "/Users/ahmadizzan/.nuget/packages/",
-      "outputPath": "/Users/ahmadizzan/Projects/susun-kuliah/susun-kuliah/obj",
+      "outputPath": "/Users/ahmadizzan/Code/stima/tubes2/susun-kuliah/susun-kuliah/obj",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "/usr/local/share/dotnet/sdk/NuGetFallbackFolder"
