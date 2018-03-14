@@ -1,0 +1,11 @@
+/Users/ahmadizzan/Projects/susun-kuliah/susun-kuliah/bin/Debug/netcoreapp2.0/susun-kuliah.deps.json
+/Users/ahmadizzan/Projects/susun-kuliah/susun-kuliah/bin/Debug/netcoreapp2.0/susun-kuliah.runtimeconfig.json
+/Users/ahmadizzan/Projects/susun-kuliah/susun-kuliah/bin/Debug/netcoreapp2.0/susun-kuliah.runtimeconfig.dev.json
+/Users/ahmadizzan/Projects/susun-kuliah/susun-kuliah/bin/Debug/netcoreapp2.0/susun-kuliah.dll
+/Users/ahmadizzan/Projects/susun-kuliah/susun-kuliah/bin/Debug/netcoreapp2.0/susun-kuliah.pdb
+/Users/ahmadizzan/Projects/susun-kuliah/susun-kuliah/obj/Debug/netcoreapp2.0/susun-kuliah.csprojResolveAssemblyReference.cache
+/Users/ahmadizzan/Projects/susun-kuliah/susun-kuliah/obj/Debug/netcoreapp2.0/susun-kuliah.csproj.CoreCompileInputs.cache
+/Users/ahmadizzan/Projects/susun-kuliah/susun-kuliah/obj/Debug/netcoreapp2.0/susun-kuliah.AssemblyInfoInputs.cache
+/Users/ahmadizzan/Projects/susun-kuliah/susun-kuliah/obj/Debug/netcoreapp2.0/susun-kuliah.AssemblyInfo.cs
+/Users/ahmadizzan/Projects/susun-kuliah/susun-kuliah/obj/Debug/netcoreapp2.0/susun-kuliah.dll
+/Users/ahmadizzan/Projects/susun-kuliah/susun-kuliah/obj/Debug/netcoreapp2.0/susun-kuliah.pdb

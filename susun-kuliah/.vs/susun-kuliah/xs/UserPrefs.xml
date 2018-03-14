@@ -1,0 +1,16 @@
+﻿<Properties StartupConfiguration="{B3DD79B8-1B51-4236-8E99-0184B6FFF4B5}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="susun-kuliah/EmptyClass.cs">
+    <Files>
+      <File FileName="susun-kuliah/Program.cs" Line="10" Column="32" />
+      <File FileName="susun-kuliah/Graph.cs" Line="4" Column="1" />
+      <File FileName="susun-kuliah/EmptyClass.cs" Line="4" Column="30" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.susun-kuliah PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+</Properties>
