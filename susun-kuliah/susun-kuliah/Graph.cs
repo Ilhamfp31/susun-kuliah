@@ -9,6 +9,8 @@ namespace susunkuliah
         public string name;
         public List<string> prerequisites;
         public int semester;
+        public int time_begin;
+        public int time_finish;
 
         public Course(string _name)
         {
@@ -69,6 +71,8 @@ namespace susunkuliah
                 string course_name = sol.Item1;
                 int highest_semester = GetHighestPrerequisiteSemester(course_name);
                 courses[course_name].semester = highest_semester + 1;
+                courses[course_name].time_begin = sol.Item2;
+                courses[course_name].time_finish = sol.Item3;
                 Console.Write(course_name);
                 Console.Write(" => Semester ");
                 Console.WriteLine(courses[course_name].semester);
