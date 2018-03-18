@@ -7,7 +7,8 @@ namespace susunkuliah
     {
         static void Main(string[] args)
         {
-            Graph g = new Graph();
+            GraphNew g = new GraphNew();
+            g.Run();
         }
     }
 }

@@ -1,7 +1,8 @@
 ﻿<Properties StartupConfiguration="{F8AFF3EF-21E0-4435-B559-0482037E3975}|Default">
   <MonoDevelop.Ide.Workbench ActiveDocument="Graph.cs">
     <Files>
-      <File FileName="Graph.cs" Line="86" Column="14" />
+      <File FileName="Graph.cs" Line="27" Column="19" />
+      <File FileName="Program.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.ItemProperties.susun-kuliah PreferredExecutionTarget="MonoDevelop.Default" />

@@ -4,6 +4,158 @@ using System.Collections.Generic;
 
 namespace susunkuliah
 {
+    public class Course
+    {
+        public string name;
+        public List<string> prerequisites;
+        public int semester;
+
+        public Course(string _name)
+        {
+            name = _name;
+            prerequisites = new List<string>();
+            semester = 1;
+        }
+
+        public void AddPrerequisite(string preq)
+        {
+            prerequisites.Add(preq);
+        }
+    }
+
+    class TopologicalSortDFS
+    {
+        Dictionary<string, Course> courses;
+
+        public TopologicalSortDFS(Dictionary<string, Course> _courses)
+        {
+            courses = _courses;
+        }
+
+        public List<Tuple<string, int, int>> GenerateSolutionDFS()
+        {
+            Dictionary<string, List<string>> adj_list = GenerateAdjList();
+            Dictionary<string, bool> visited = new Dictionary<string, bool>();
+            List<string> start_courses = GetStartCourses();
+            List<Tuple<string, int, int>> solution = new List<Tuple<string, int, int>>();
+            int cur_timestamp = 0;
+
+            void _GenerateSolutionDFS(string course_name)
+            {
+                cur_timestamp++;
+                int time_start = cur_timestamp;
+                visited[course_name] = true;
+                foreach (string neighbour in adj_list[course_name])
+                {
+                    if (!visited.ContainsKey(neighbour))
+                    {
+                        _GenerateSolutionDFS(neighbour);
+                    }
+                }
+                cur_timestamp++;
+                int time_finish = cur_timestamp;
+                solution.Add(new Tuple<string, int, int>(course_name, time_start, time_finish));
+            }
+
+            foreach (string course_name in start_courses)
+            {
+                _GenerateSolutionDFS(course_name);
+            }
+
+            solution.Reverse();
+
+            return solution;
+        }
+
+        public Dictionary<string, List<string>> GenerateAdjList()
+        {
+            Dictionary<string, List<string>> adj_list = new Dictionary<string, List<string>>();
+
+            foreach (string course_name in courses.Keys)
+            {
+                if (!adj_list.ContainsKey(course_name))
+                {
+                    adj_list[course_name] = new List<string>();
+                }
+                foreach (var preq in courses[course_name].prerequisites)
+                {
+                    if (adj_list.ContainsKey(preq))
+                    {
+                        adj_list[preq].Add(courses[course_name].name);
+                    }
+                    else
+                    {
+                        adj_list.Add(preq, new List<string> { courses[course_name].name });
+                    }
+                }
+            }
+
+            return adj_list;
+        }
+
+        public List<string> GetStartCourses()
+        {
+            List<string> start_courses = new List<string>();
+
+            foreach (string course_name in courses.Keys)
+            {
+                if (courses[course_name].prerequisites.Count == 0)
+                {
+                    start_courses.Add(courses[course_name].name);
+                }
+            }
+
+            return start_courses;
+        }
+    }
+
+    public class GraphNew {
+        Dictionary<string, Course> courses;
+
+        public GraphNew() {
+            courses = new Dictionary<string, Course>();
+
+            // Hard code for testing purposes
+            Course C1 = new Course("C1");
+            C1.AddPrerequisite("C3");
+            courses["C1"] = C1;
+            //courses.Add(C1);
+
+            Course C2 = new Course("C2");
+            C2.AddPrerequisite("C1");
+            C2.AddPrerequisite("C4");
+            courses["C2"] = C2;
+            //courses.Add(C2);
+
+            Course C3 = new Course("C3");
+            courses["C3"] = C3;
+            //courses.Add(C3);
+
+            Course C4 = new Course("C4");
+            C4.AddPrerequisite("C1");
+            C4.AddPrerequisite("C3");
+            courses["C4"] = C4;
+            //courses.Add(C4);
+
+            Course C5 = new Course("C5");
+            C5.AddPrerequisite("C2");
+            C5.AddPrerequisite("C4");
+            courses["C5"] = C5;
+            //courses.Add(C5);
+        }
+
+        public void Run() {
+            TopologicalSortDFS youngG = new TopologicalSortDFS(courses);
+            List<Tuple<string, int, int>> solution = youngG.GenerateSolutionDFS();
+
+            foreach (var x in solution)
+            {
+                Console.WriteLine(x.ToString());
+            }
+        }
+
+    }
+
     public class Graph
     {
         Dictionary<string, List<string>> adj = new Dictionary<string, List<string>>();
@@ -12,7 +164,7 @@ namespace susunkuliah
         List<string> solution = new List<string>();
         int cur_timestamp = 0;
 
-        Dictionary<string, List<string>> preq;
+        //Dictionary<string, List<string>> preq;
 
         public Graph()
         {
