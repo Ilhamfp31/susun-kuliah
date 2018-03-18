@@ -14,7 +14,7 @@ namespace susunkuliah
         {
             name = _name;
             prerequisites = new List<string>();
-            semester = 1;
+            semester = 0;
         }
 
         public void AddPrerequisite(string preq)
@@ -23,11 +23,11 @@ namespace susunkuliah
         }
     }
 
-    class TopologicalSortDFS
+    class TopologicalSort
     {
         Dictionary<string, Course> courses;
 
-        public TopologicalSortDFS(Dictionary<string, Course> _courses)
+        public TopologicalSort(Dictionary<string, Course> _courses)
         {
             courses = _courses;
         }
@@ -63,6 +63,16 @@ namespace susunkuliah
             }
 
             solution.Reverse();
+
+            foreach (var sol in solution)
+            {
+                string course_name = sol.Item1;
+                int highest_semester = GetHighestPrerequisiteSemester(course_name);
+                courses[course_name].semester = highest_semester + 1;
+                Console.Write(course_name);
+                Console.Write(" => Semester ");
+                Console.WriteLine(courses[course_name].semester);
+            }
 
             return solution;
         }
@@ -107,6 +117,20 @@ namespace susunkuliah
 
             return start_courses;
         }
+
+        public int GetHighestPrerequisiteSemester(string course_name) {
+            int mx = 0;
+
+            foreach (var preq in courses[course_name].prerequisites)
+            {
+                if (courses[preq].semester > mx)
+                {
+                    mx = courses[preq].semester;
+                }
+            }
+
+            return mx;
+        }
     }
 
     public class GraphNew {
@@ -145,7 +169,7 @@ namespace susunkuliah
         }
 
         public void Run() {
-            TopologicalSortDFS youngG = new TopologicalSortDFS(courses);
+            TopologicalSort youngG = new TopologicalSort(courses);
             List<Tuple<string, int, int>> solution = youngG.GenerateSolutionDFS();
 
             foreach (var x in solution)
