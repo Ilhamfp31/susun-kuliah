@@ -7,6 +7,7 @@ using System.Drawing.Imaging;
 using System.Windows.Media.Imaging;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace SusunKuliah
 {
@@ -46,12 +47,14 @@ namespace SusunKuliah
             Dictionary<string, bool> visited = new Dictionary<string, bool>();
             List<string> start_courses = GetStartCourses();
             List<Tuple<string, int, int>> solution = new List<Tuple<string, int, int>>();
+            List<Tuple<string, int, int>> semester = new List<Tuple<string, int, int>>();
             int cur_timestamp = 0;
 
             void _GenerateSolutionDFS(string course_name)
             {
                 cur_timestamp++;
                 int time_start = cur_timestamp;
+                solution.Add(new Tuple<string, int, int>(course_name, time_start, -1));
                 visited[course_name] = true;
                 foreach (string neighbour in adj_list[course_name])
                 {
@@ -62,6 +65,7 @@ namespace SusunKuliah
                 }
                 cur_timestamp++;
                 int time_finish = cur_timestamp;
+                semester.Add(new Tuple<string, int, int>(course_name, time_start, time_finish));
                 solution.Add(new Tuple<string, int, int>(course_name, time_start, time_finish));
             }
 
@@ -70,9 +74,9 @@ namespace SusunKuliah
                 _GenerateSolutionDFS(course_name);
             }
 
-            solution.Reverse();
+            semester.Reverse();
 
-            foreach (var sol in solution)
+            foreach (var sol in semester)
             {
                 string course_name = sol.Item1;
                 int highest_semester = GetHighestPrerequisiteSemester(course_name);
@@ -415,7 +419,7 @@ namespace SusunKuliah
             //Inisialisasi map kuliah
             Dictionary<string, List<string>> mapKuliah = new Dictionary<string, List<string>>();
             Dictionary<string, Course> courses = new Dictionary<string, Course>();
-            
+
             //Cek file sudah didapat atau belum
             if (result == true)
             {
@@ -432,7 +436,7 @@ namespace SusunKuliah
                         {
                             if (!sudahDapatAwal)
                             {
-                                if (kodeKuliah[i] == ',')
+                                if (kodeKuliah[i] == ',' || kodeKuliah[i] == '.')
                                 {
                                     kodeKuliahDitunjuk = Regex.Replace(kodeKuliahMasukan, @"\s+", String.Empty);
                                     courses[kodeKuliahDitunjuk] = new Course(kodeKuliahDitunjuk);
@@ -470,11 +474,11 @@ namespace SusunKuliah
                 }
 
                 //Graph untuk digambar.
-                Microsoft.Msagl.Drawing.Graph   = new Microsoft.Msagl.Drawing.Graph("");
+                Microsoft.Msagl.Drawing.Graph graph = new Microsoft.Msagl.Drawing.Graph("");
                 //Masukan graph yang sudah dibaca.
                 foreach (KeyValuePair<string, List<string>> entry in mapKuliah)
                 {
-                    for(int i=0; i< entry.Value.Count; ++i)
+                    for (int i = 0; i < entry.Value.Count; ++i)
                     {
                         graph.AddEdge(entry.Value[i], entry.Key);
                         //Console.WriteLine("Key = {0}, Value = {1}", entry.Key, entry.Value[i]);
@@ -491,37 +495,63 @@ namespace SusunKuliah
 
                 //Tampilkan gambar pertama
                 ImageBox1.Source = listGambar[counterGambarTampil];
-                
+
                 //Cek pilihan sort
                 if (rdBtnDFS.IsChecked == true)
                 {
                     TopologicalSort topo = new TopologicalSort(courses);
                     List<Tuple<string, int, int>> dfs = topo.GenerateSolutionDFS();
 
+                    foreach (var x in dfs)
+                    {
+                        Console.WriteLine(x.ToString());
+                    }
+
+                    // dfs = dfs.OrderByDescending(t => t.Item2).ToList();
+
+
                     //Graph untuk digambar.
                     //Microsoft.Msagl.Drawing.Graph graph = new Microsoft.Msagl.Drawing.Graph("");
                     //Masukan graph yang sudah dibaca.
 
-
                     foreach (Tuple<string, int, int> entry in dfs)
                     {
-                        
-                        graph.FindNode(entry.Item1).Attr.FillColor = Microsoft.Msagl.Drawing.Color.Red;
-                        //Gambar graph awal step by step
-                        Microsoft.Msagl.GraphViewerGdi.GraphRenderer renderer = new Microsoft.Msagl.GraphViewerGdi.GraphRenderer(graph);
-                        renderer.CalculateLayout();
-                        int width = 250;
-                        Bitmap bitmap = new Bitmap(width, (int)(graph.Height * (width / graph.Width)), PixelFormat.Format32bppPArgb);
-                        renderer.Render(bitmap);
-                        //Masukan gambar ke dalam list gambar
-                        listGambar.Add(BitmapToImageSource(bitmap));
+                        if (entry.Item3 == -1)
+                        {
+                            graph.FindNode(entry.Item1).Attr.FillColor = Microsoft.Msagl.Drawing.Color.Red;
+                            graph.FindNode(entry.Item1).LabelText = graph.FindNode(entry.Item1).LabelText + " " + entry.Item2 + "/";
+                            //Gambar graph awal step by step
+                            renderer = new Microsoft.Msagl.GraphViewerGdi.GraphRenderer(graph);
+                            renderer.CalculateLayout();
+                            width = 250;
+                            bitmap = new Bitmap(width, (int)(graph.Height * (width / graph.Width)), PixelFormat.Format32bppPArgb);
+                            renderer.Render(bitmap);
+                            //Masukan gambar ke dalam list gambar
+                            listGambar.Add(BitmapToImageSource(bitmap));
+                        }
+                        else
+                        {
+                            graph.FindNode(entry.Item1).Attr.FillColor = Microsoft.Msagl.Drawing.Color.Blue;
+                            graph.FindNode(entry.Item1).LabelText = graph.FindNode(entry.Item1).LabelText + entry.Item3;
+                            //Gambar graph awal step by step
+                            renderer = new Microsoft.Msagl.GraphViewerGdi.GraphRenderer(graph);
+                            renderer.CalculateLayout();
+                            width = 250;
+                            bitmap = new Bitmap(width, (int)(graph.Height * (width / graph.Width)), PixelFormat.Format32bppPArgb);
+                            renderer.Render(bitmap);
+                            //Masukan gambar ke dalam list gambar
+                            listGambar.Add(BitmapToImageSource(bitmap));
+                        }
+
 
                     }
 
 
+
+
                     ////Mulai DFS
                     //Stack<string> s = new Stack<string>();
-                            
+
 
 
                     //while (s.Count != 0)
@@ -534,32 +564,7 @@ namespace SusunKuliah
                 else if (rdBtnBFS.IsChecked == true)
                 {
                     //Mulai BFS
-                    
-                    Queue < string > q = new Queue<string>();
 
-                    foreach (KeyValuePair<string, List<string>> entry in mapKuliah)
-                    {
-                        // Warnai node yang dikunjungi dengan
-                        // graph.FindNode("A").Attr.FillColor =Microsoft.Msagl.Drawing.Color.Red;
-
-                        while (q.Count != 0)
-                        {
-                            //Lakukan apa gitu kek BFS
-                        }
-
-                        //Gambar graph hasil BFS step by step
-                        //Gambar graph awal step by step
-                        Microsoft.Msagl.GraphViewerGdi.GraphRenderer renderer = new Microsoft.Msagl.GraphViewerGdi.GraphRenderer(graph);
-                        renderer.CalculateLayout();
-                        int width = 250;
-                        Bitmap bitmap = new Bitmap(width, (int)(graph.Height * (width / graph.Width)), PixelFormat.Format32bppPArgb);
-                        renderer.Render(bitmap);
-                        //Masukan gambar ke dalam list gambar
-                        listGambar.Add(BitmapToImageSource(bitmap));
-
-                        // Warnai kembali node yang dikunjungi tadi ke warna awalnya
-                        // graph.FindNode("A").Attr.FillColor =Microsoft.Msagl.Drawing.Color.White;
-                    }
 
                 }
                 else
@@ -568,7 +573,8 @@ namespace SusunKuliah
                     System.Windows.MessageBox.Show("Mohon pilih salah satu tipe topological sort (DFS/BFS).");
                 }
 
-            } else
+            }
+            else
             {
                 //Jika file belum didapat munculkan pesan error.
                 System.Windows.MessageBox.Show("Mohon masukkan file input.");
@@ -581,7 +587,7 @@ namespace SusunKuliah
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
             int temp = counterGambarTampil + 1;
-            counterGambarTampil = Math.Min(listGambar.Count - 1 , temp);
+            counterGambarTampil = Math.Min(listGambar.Count - 1, temp);
             ImageBox1.Source = (listGambar[counterGambarTampil]);
         }
 
