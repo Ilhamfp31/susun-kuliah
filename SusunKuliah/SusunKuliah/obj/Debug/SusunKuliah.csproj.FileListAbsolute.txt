@@ -48,3 +48,24 @@ D:\Tubes Stima 2\SusunKuliah\SusunKuliah\obj\Debug\SusunKuliah.csproj.GenerateRe
 D:\Tubes Stima 2\SusunKuliah\SusunKuliah\obj\Debug\SusunKuliah.csproj.CoreCompileInputs.cache
 D:\Tubes Stima 2\SusunKuliah\SusunKuliah\obj\Debug\SusunKuliah.exe
 D:\Tubes Stima 2\SusunKuliah\SusunKuliah\obj\Debug\SusunKuliah.pdb
+D:\Tubes Stima 2\Tubes Stima 2\susun-kuliah\SusunKuliah\SusunKuliah\bin\Debug\SusunKuliah.exe.config
+D:\Tubes Stima 2\Tubes Stima 2\susun-kuliah\SusunKuliah\SusunKuliah\bin\Debug\SusunKuliah.exe
+D:\Tubes Stima 2\Tubes Stima 2\susun-kuliah\SusunKuliah\SusunKuliah\bin\Debug\SusunKuliah.pdb
+D:\Tubes Stima 2\Tubes Stima 2\susun-kuliah\SusunKuliah\SusunKuliah\bin\Debug\Microsoft.Msagl.dll
+D:\Tubes Stima 2\Tubes Stima 2\susun-kuliah\SusunKuliah\SusunKuliah\bin\Debug\Microsoft.Msagl.Drawing.dll
+D:\Tubes Stima 2\Tubes Stima 2\susun-kuliah\SusunKuliah\SusunKuliah\bin\Debug\Microsoft.Msagl.GraphViewerGdi.dll
+D:\Tubes Stima 2\Tubes Stima 2\susun-kuliah\SusunKuliah\SusunKuliah\bin\Debug\Microsoft.Msagl.xml
+D:\Tubes Stima 2\Tubes Stima 2\susun-kuliah\SusunKuliah\SusunKuliah\bin\Debug\Microsoft.Msagl.Drawing.xml
+D:\Tubes Stima 2\Tubes Stima 2\susun-kuliah\SusunKuliah\SusunKuliah\bin\Debug\Microsoft.Msagl.GraphViewerGdi.xml
+D:\Tubes Stima 2\Tubes Stima 2\susun-kuliah\SusunKuliah\SusunKuliah\obj\Debug\SusunKuliah.csprojResolveAssemblyReference.cache
+D:\Tubes Stima 2\Tubes Stima 2\susun-kuliah\SusunKuliah\SusunKuliah\obj\Debug\MainWindow.g.cs
+D:\Tubes Stima 2\Tubes Stima 2\susun-kuliah\SusunKuliah\SusunKuliah\obj\Debug\App.g.cs
+D:\Tubes Stima 2\Tubes Stima 2\susun-kuliah\SusunKuliah\SusunKuliah\obj\Debug\SusunKuliah_MarkupCompile.cache
+D:\Tubes Stima 2\Tubes Stima 2\susun-kuliah\SusunKuliah\SusunKuliah\obj\Debug\SusunKuliah_MarkupCompile.lref
+D:\Tubes Stima 2\Tubes Stima 2\susun-kuliah\SusunKuliah\SusunKuliah\obj\Debug\MainWindow.baml
+D:\Tubes Stima 2\Tubes Stima 2\susun-kuliah\SusunKuliah\SusunKuliah\obj\Debug\SusunKuliah.g.resources
+D:\Tubes Stima 2\Tubes Stima 2\susun-kuliah\SusunKuliah\SusunKuliah\obj\Debug\SusunKuliah.Properties.Resources.resources
+D:\Tubes Stima 2\Tubes Stima 2\susun-kuliah\SusunKuliah\SusunKuliah\obj\Debug\SusunKuliah.csproj.GenerateResource.Cache
+D:\Tubes Stima 2\Tubes Stima 2\susun-kuliah\SusunKuliah\SusunKuliah\obj\Debug\SusunKuliah.csproj.CoreCompileInputs.cache
+D:\Tubes Stima 2\Tubes Stima 2\susun-kuliah\SusunKuliah\SusunKuliah\obj\Debug\SusunKuliah.exe
+D:\Tubes Stima 2\Tubes Stima 2\susun-kuliah\SusunKuliah\SusunKuliah\obj\Debug\SusunKuliah.pdb

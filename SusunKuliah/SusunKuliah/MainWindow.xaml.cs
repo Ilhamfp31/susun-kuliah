@@ -100,15 +100,22 @@ namespace SusunKuliah
             bool end = false;
             bool continuity = true;
 
-            counter = fillCounter(adj);
+            counter = fillCounter();
+
+            foreach (var x in counter)
+            {
+                Console.Write(x.Key);
+                Console.Write(" : ");
+                Console.WriteLine(x.Value);
+            }
 
             while (!end && continuity)
             {
                 end = true;
                 continuity = false;
+                deliminator.Clear();
                 foreach (var item in counter)
                 {
-                    deliminator.Clear();
                     if (item.Value == 0)
                     {
                         continuity = true;
@@ -141,11 +148,13 @@ namespace SusunKuliah
                     solution.Add(new List<string>(deliminator));
                 }
             }
+            
             return solution;
         }
 
-        public Dictionary<string, int> fillCounter(Dictionary<string, List<string>> adj)
+        public Dictionary<string, int> fillCounter()
         {
+            Dictionary<string, List<string>> adj = GenerateAdjList();
             Dictionary<string, int> counter = new Dictionary<string, int>();
             foreach (var item in adj)
             {
@@ -463,6 +472,9 @@ namespace SusunKuliah
         //Counter gambar
         int counterGambarTampil = 0;
 
+        //Set PesanSemester
+        string PesanSemester = "";
+        
         //List Gambar
         List<BitmapImage> listGambar = new List<BitmapImage>();
 
@@ -573,10 +585,11 @@ namespace SusunKuliah
                 //Tampilkan gambar pertama
                 ImageBox1.Source = listGambar[counterGambarTampil];
 
+                TopologicalSort topo = new TopologicalSort(courses);
+
                 //Cek pilihan sort
                 if (rdBtnDFS.IsChecked == true)
                 {
-                    TopologicalSort topo = new TopologicalSort(courses);
                     List<Tuple<string, int, int>> dfs = topo.GenerateSolutionDFS();
 
                     foreach (var x in dfs)
@@ -623,25 +636,46 @@ namespace SusunKuliah
 
                     }
 
-
-
-
-                    ////Mulai DFS
-                    //Stack<string> s = new Stack<string>();
-
-
-
-                    //while (s.Count != 0)
-                    //{
-                    //    //Lakukan apa gitu kek DFS
-                    //}
-
-
                 }
                 else if (rdBtnBFS.IsChecked == true)
                 {
+                    
                     //Mulai BFS
+                    List<List<string>> bfs = topo.GenerateSolutionBFS();
+                    
+                    foreach (var x in bfs)
+                    {
+                        foreach (var entry in x)
+                        {
+                            graph.FindNode(entry).Attr.FillColor = Microsoft.Msagl.Drawing.Color.Blue;
+                     
+                            //Gambar graph awal step by step
+                        
+                        }
+                        renderer = new Microsoft.Msagl.GraphViewerGdi.GraphRenderer(graph);
+                        renderer.CalculateLayout();
+                        width = 250;
+                        bitmap = new Bitmap(width, (int)(graph.Height * (width / graph.Width)), PixelFormat.Format32bppPArgb);
+                        renderer.Render(bitmap);
+                        //Masukan gambar ke dalam list gambar
+                        listGambar.Add(BitmapToImageSource(bitmap));
+                    }
 
+                    //Tambahkan pesan akhir ke PesanSemester
+                    int counterSemester = 0;
+                    foreach (var x in bfs)
+                    {
+                        counterSemester++;
+                        PesanSemester += "Semester " + counterSemester + ": ";
+                        for(int i = 0; i< x.Count; ++i) {
+                            PesanSemester += x[i];
+                            if(i != x.Count - 1)
+                            {
+                                PesanSemester += ", ";
+                            }
+                        }
+                        PesanSemester += " \n";
+                    }
 
                 }
                 else
@@ -663,9 +697,21 @@ namespace SusunKuliah
         //Button tunjukan selanjutnya
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            int temp = counterGambarTampil + 1;
-            counterGambarTampil = Math.Min(listGambar.Count - 1, temp);
-            ImageBox1.Source = (listGambar[counterGambarTampil]);
+            
+            if (counterGambarTampil == listGambar.Count - 1) {
+                ImageBox1.Opacity = 0.0;
+                TextBox2.Opacity = 100.0;
+                TextBox2.Text = PesanSemester;
+                TextBox2.FontSize = 20;
+            } else
+            {
+                int temp = counterGambarTampil + 1;
+                counterGambarTampil = Math.Min(listGambar.Count - 1, temp);
+                ImageBox1.Source = (listGambar[counterGambarTampil]);
+            }
+
+            
+            
         }
 
         //Ubah bitmap ke bitmapimage agar dapat ditampilkan
@@ -683,6 +729,11 @@ namespace SusunKuliah
 
                 return bitmapimage;
             }
+        }
+
+        private void TextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+
         }
     }
 
