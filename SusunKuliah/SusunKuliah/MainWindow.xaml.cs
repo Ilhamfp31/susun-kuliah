@@ -636,6 +636,42 @@ namespace SusunKuliah
 
                     }
 
+                    //Tambahkan pesan akhir ke PesanSemester
+                    int counterSemester = 0;
+                    int maxSemester = 0;
+                    foreach (var x in courses)
+                    {
+                        if (x.Value.semester > maxSemester)
+                        {
+                            maxSemester = x.Value.semester;
+                        }
+                    }
+                    List<List<string>> semesterList = new List<List<string>>();
+                    for (int i = 0; i < maxSemester; i++) {
+                        semesterList.Add(new List<string>());
+                    }
+                    foreach (var x in courses)
+                    {
+                        foreach (var y in x.Value.prerequisites)
+                        {
+                            semesterList[x.Value.semester - 1].Add(y);   
+                        }
+                    }
+                    foreach (var x in semesterList)
+                    {
+                        counterSemester++;
+                        PesanSemester += "Semester " + counterSemester + ": ";
+                        for (int i = 0; i < x.Count; ++i)
+                        {
+                            PesanSemester += x[i];
+                            if (i != x.Count - 1)
+                            {
+                                PesanSemester += ", ";
+                            }
+                        }
+                        PesanSemester += " \n";
+                    }
+
                 }
                 else if (rdBtnBFS.IsChecked == true)
                 {
