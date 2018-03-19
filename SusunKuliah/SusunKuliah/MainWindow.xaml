@@ -37,7 +37,7 @@
         <TextBox Name="TextBox2" Opacity="0.0" HorizontalAlignment="Center" Height="532" Margin="96,51,6,6" TextWrapping="Wrap" VerticalAlignment="Center" Width="895" TextAlignment="Center"/>
         <Image Name="ImageBox1" Stretch="Uniform" HorizontalAlignment="Center" Height="537" Margin="90,40,0,0" VerticalAlignment="Center" Width="895"/>
         <Button Content="About" HorizontalAlignment="Left" Margin="10,548,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_3"/>
-        <Image Name="TestImage1" Source="itb_logo1.png" Height="100" Width="100" Margin="787,468,110,21">
+        <Image Name="TestImage1" Source="itb_logo1.png" Height="100" Width="100" Margin="887,468,10,21">
             <Image.Triggers>
                 <EventTrigger RoutedEvent="MouseEnter">
                     <BeginStoryboard>
@@ -66,7 +66,7 @@
                 </EventTrigger>
             </Image.Triggers>
         </Image>
-        <Image Name="TestImage2" Source="itb_logo1.png" Height="100" Width="100" Opacity="0" Margin="887,468,10,21">
+        <Image Name="TestImage2" Source="hmif_logo3.png" Height="100" Opacity="1" Margin="739,468,131,21">
             <Image.Triggers>
                 <EventTrigger RoutedEvent="MouseEnter">
                     <BeginStoryboard>
@@ -74,8 +74,8 @@
                             <DoubleAnimation
                             BeginTime="0:0:0"
                             Duration="0:0:0.5"
-                            From="0"
-                            To="1"
+                            From="1"
+                            To="0"
                             Storyboard.TargetProperty="(Image.Opacity)"
                             />
                         </Storyboard>
@@ -87,8 +87,8 @@
                             <DoubleAnimation
                             BeginTime="0:0:0"
                             Duration="0:0:0.8"
-                            From="1"
-                            To="0"
+                            From="0"
+                            To="1"
                             Storyboard.TargetProperty="(Image.Opacity)"/>
                         </Storyboard>
                     </BeginStoryboard>

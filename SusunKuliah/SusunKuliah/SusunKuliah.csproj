@@ -150,5 +150,8 @@
   <ItemGroup>
     <Resource Include="itb_logo2.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="hmif_logo3.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
