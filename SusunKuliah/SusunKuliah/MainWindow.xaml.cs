@@ -296,7 +296,11 @@ namespace SusunKuliah
 
         public MainWindow()
         {
+            SplashScreen splashScreen = new SplashScreen("SusunKuliahIcon.ico");
+            splashScreen.Show(true);
+            System.Threading.Thread.Sleep(500);
             InitializeComponent();
+            this.Background = new System.Windows.Media.ImageBrush(new BitmapImage(new Uri(@"pack://application:,,,/bg1.jpg")));
         }
 
         // Button untuk ambil file
@@ -455,10 +459,7 @@ namespace SusunKuliah
 
                     foreach (var x in courses)
                     {
-                        foreach (var y in x.Value.prerequisites)
-                        {
-                            semesterList[x.Value.semester - 1].Add(x.Key);   
-                        }
+                        semesterList[x.Value.semester - 1].Add(x.Key);
                     }
 
                     // Generate string informasi matakuliah per semester
@@ -523,14 +524,14 @@ namespace SusunKuliah
                 else
                 {
                     // Jika tipe sort belum dipilih munculkan pesan error.
-                    System.Windows.MessageBox.Show("Mohon pilih salah satu tipe topological sort (DFS/BFS).");
+                    System.Windows.MessageBox.Show("Please choose one type of topological sort (DFS/BFS).");
                 }
 
             }
             else
             {
                 // Jika file belum didapat munculkan pesan error.
-                System.Windows.MessageBox.Show("Mohon masukkan file input.");
+                System.Windows.MessageBox.Show("Please enter the input file.");
             }
 
 
@@ -572,9 +573,10 @@ namespace SusunKuliah
             }
         }
 
-        private void TextBox_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
-        {
 
+        private void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            System.Windows.MessageBox.Show("College courses scheduler app for IF2211 - Institut Teknologi Bandung \n\nby\nIlham Firdausi Putra 13516140\nYusuf Rahmat Pratama 13516062\nAhmad Izzan 13516116\n ");
         }
     }
 

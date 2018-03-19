@@ -5,19 +5,20 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SusunKuliah"
         mc:Ignorable="d"
-        Title="Susun Kuliah" Height="617.5" Width="1003">
+        Title="Susun Kuliah" Height="617.5" Width="1003" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid>
         <Button Content="Browse" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click" Height="25"/>
         <TextBox Name="TextBox1" Height="25" Width="890" 
-            Text="Masukan file input" 
+            Text="Input File..." 
             Margin="95,10,0,0" VerticalAlignment="Top" 
             HorizontalAlignment="Left" >
         </TextBox>
         <RadioButton Name="rdBtnDFS" Content="DFS" HorizontalAlignment="Left" Margin="23,45,0,0" VerticalAlignment="Top"/>
         <RadioButton Name="rdBtnBFS" Content="BFS" HorizontalAlignment="Left" Margin="23,65,0,0" VerticalAlignment="Top"/>
-        <Button Content="Susun" HorizontalAlignment="Left" Margin="10,98,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1" Height="24"/>
-        <Button Content="Tampilkan &#xD;&#xA;Selanjutnya" HorizontalAlignment="Left" Margin="10,144,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.253,-0.2" Height="37" Click="Button_Click_2"/>
-        <TextBox Name="TextBox2" Opacity="0.0" HorizontalAlignment="Center" Height="532" Margin="90,45,0,0" TextWrapping="Wrap" VerticalAlignment="Center" Width="895" TextChanged="TextBox_TextChanged" TextAlignment="Center"/>
+        <Button Content="Arrange" HorizontalAlignment="Left" Margin="10,98,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1" Height="31"/>
+        <Button Content="Next" HorizontalAlignment="Left" Margin="10,147,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.253,-0.2" Height="37" Click="Button_Click_2"/>
+        <TextBox Name="TextBox2" Opacity="0.0" HorizontalAlignment="Center" Height="532" Margin="96,51,6,6" TextWrapping="Wrap" VerticalAlignment="Center" Width="895" TextAlignment="Center"/>
         <Image Name="ImageBox1" Stretch="Uniform" HorizontalAlignment="Center" Height="537" Margin="90,40,0,0" VerticalAlignment="Center" Width="895"/>
+        <Button Content="About" HorizontalAlignment="Left" Margin="10,548,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_3"/>
     </Grid>
 </Window>

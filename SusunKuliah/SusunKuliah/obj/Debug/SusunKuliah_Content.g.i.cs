@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("susunkuliahicon.ico")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("bg1.jpg")]
 
 
