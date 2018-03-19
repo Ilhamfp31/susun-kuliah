@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("hmif_logo3.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("microsoft.msagl.drawing.dll")]
 
 
