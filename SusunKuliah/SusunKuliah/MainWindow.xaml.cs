@@ -8,6 +8,8 @@ using System.Windows.Media.Imaging;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Linq;
+using System.Windows.Media;
+
 
 namespace SusunKuliah
 {
@@ -290,7 +292,7 @@ namespace SusunKuliah
 
         // Set PesanSemester
         string PesanSemester = "";
-        
+
         // List Gambar
         List<BitmapImage> listGambar = new List<BitmapImage>();
 
@@ -394,7 +396,7 @@ namespace SusunKuliah
                 Microsoft.Msagl.GraphViewerGdi.GraphRenderer renderer = new Microsoft.Msagl.GraphViewerGdi.GraphRenderer(graph);
                 renderer.CalculateLayout();
                 int width = 250;
-                Bitmap bitmap = new Bitmap(width, (int)(graph.Height * (width / graph.Width)), PixelFormat.Format32bppPArgb);
+                Bitmap bitmap = new Bitmap(width, (int)(graph.Height * (width / graph.Width)), System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
                 renderer.Render(bitmap);
 
                 //Masukan gambar graph awal ke dalam list gambar
@@ -431,7 +433,7 @@ namespace SusunKuliah
                         renderer = new Microsoft.Msagl.GraphViewerGdi.GraphRenderer(graph);
                         renderer.CalculateLayout();
                         width = 250;
-                        bitmap = new Bitmap(width, (int)(graph.Height * (width / graph.Width)), PixelFormat.Format32bppPArgb);
+                        bitmap = new Bitmap(width, (int)(graph.Height * (width / graph.Width)), System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
                         renderer.Render(bitmap);
 
                         // Memasukan rendered graph ke list graph untuk keperluan visualisasi step-by-step
@@ -497,7 +499,7 @@ namespace SusunKuliah
                         renderer = new Microsoft.Msagl.GraphViewerGdi.GraphRenderer(graph);
                         renderer.CalculateLayout();
                         width = 250;
-                        bitmap = new Bitmap(width, (int)(graph.Height * (width / graph.Width)), PixelFormat.Format32bppPArgb);
+                        bitmap = new Bitmap(width, (int)(graph.Height * (width / graph.Width)), System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
                         renderer.Render(bitmap);
 
                         // Memasukan gambar ke dalam list gambar
@@ -510,9 +512,9 @@ namespace SusunKuliah
                     {
                         counterSemester++;
                         PesanSemester += "Semester " + counterSemester + ": ";
-                        for(int i = 0; i< x.Count; ++i) {
+                        for (int i = 0; i < x.Count; ++i) {
                             PesanSemester += x[i];
-                            if(i != x.Count - 1)
+                            if (i != x.Count - 1)
                             {
                                 PesanSemester += ", ";
                             }
@@ -541,20 +543,21 @@ namespace SusunKuliah
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
             if (counterGambarTampil == listGambar.Count - 1) {
-                ImageBox1.Opacity = 0.0;
+                ImageBox1.Height = 0;
+                ImageBox1.Width = 0;
                 TextBox2.Opacity = 100.0;
                 TextBox2.Text = PesanSemester;
                 TextBox2.FontSize = 20;
             } else
             {
+
                 int temp = counterGambarTampil + 1;
                 counterGambarTampil = Math.Min(listGambar.Count - 1, temp);
                 ImageBox1.Source = (listGambar[counterGambarTampil]);
-            }
 
-            
-            
+            }
         }
+
 
         // Ubah bitmap ke bitmapimage agar dapat ditampilkan
         BitmapImage BitmapToImageSource(Bitmap bitmap)

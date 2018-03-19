@@ -16,9 +16,84 @@
         <RadioButton Name="rdBtnDFS" Content="DFS" HorizontalAlignment="Left" Margin="23,45,0,0" VerticalAlignment="Top"/>
         <RadioButton Name="rdBtnBFS" Content="BFS" HorizontalAlignment="Left" Margin="23,65,0,0" VerticalAlignment="Top"/>
         <Button Content="Arrange" HorizontalAlignment="Left" Margin="10,98,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_1" Height="31"/>
-        <Button Content="Next" HorizontalAlignment="Left" Margin="10,147,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.253,-0.2" Height="37" Click="Button_Click_2"/>
+        <Button Content="Next" HorizontalAlignment="Left" Margin="10,147,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.253,-0.2" Height="37" Click="Button_Click_2">
+            <Button.Triggers>
+                <EventTrigger RoutedEvent="Button.Click">
+                    <EventTrigger.Actions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="ImageBox1" 
+                                         Storyboard.TargetProperty="Opacity"
+                                         To="0" Duration="0:00:00.2" />
+                                <DoubleAnimation Storyboard.TargetName="ImageBox1" 
+                                         Storyboard.TargetProperty="Opacity"
+                                         To="1" Duration="0:00:00.2" />
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+            </Button.Triggers>
+        </Button>
         <TextBox Name="TextBox2" Opacity="0.0" HorizontalAlignment="Center" Height="532" Margin="96,51,6,6" TextWrapping="Wrap" VerticalAlignment="Center" Width="895" TextAlignment="Center"/>
         <Image Name="ImageBox1" Stretch="Uniform" HorizontalAlignment="Center" Height="537" Margin="90,40,0,0" VerticalAlignment="Center" Width="895"/>
         <Button Content="About" HorizontalAlignment="Left" Margin="10,548,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click_3"/>
+        <Image Name="TestImage1" Source="itb_logo1.png" Height="100" Width="100" Margin="787,468,110,21">
+            <Image.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                            BeginTime="0:0:0"
+                            Duration="0:0:0.5"
+                            From="1"
+                            To="0"
+                            Storyboard.TargetProperty="(Image.Opacity)"
+                            />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                            BeginTime="0:0:0"
+                            Duration="0:0:0.8"
+                            From="0"
+                            To="1"
+                            Storyboard.TargetProperty="(Image.Opacity)"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Image.Triggers>
+        </Image>
+        <Image Name="TestImage2" Source="itb_logo1.png" Height="100" Width="100" Opacity="0" Margin="887,468,10,21">
+            <Image.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                            BeginTime="0:0:0"
+                            Duration="0:0:0.5"
+                            From="0"
+                            To="1"
+                            Storyboard.TargetProperty="(Image.Opacity)"
+                            />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                            BeginTime="0:0:0"
+                            Duration="0:0:0.8"
+                            From="1"
+                            To="0"
+                            Storyboard.TargetProperty="(Image.Opacity)"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Image.Triggers>
+        </Image>
     </Grid>
 </Window>

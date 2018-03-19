@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("bg1.jpg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("itb_logo2.png")]
 
 
