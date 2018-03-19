@@ -457,7 +457,7 @@ namespace SusunKuliah
                     {
                         foreach (var y in x.Value.prerequisites)
                         {
-                            semesterList[x.Value.semester - 1].Add(y);   
+                            semesterList[x.Value.semester - 1].Add(x.Key);   
                         }
                     }
 

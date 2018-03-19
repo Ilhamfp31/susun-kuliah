@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace susunkuliah
 {
+    // Class course untuk merepresentasikan mata kuliah pada persoalan
     public class Course
     {
         public string name;
@@ -25,28 +26,50 @@ namespace susunkuliah
         }
     }
 
+    // Class TopologicalSort sebagai algoritma utama
     class TopologicalSort
     {
+        // courses berisikan matakuliah serta prerequisitenya
         Dictionary<string, Course> courses;
 
+        // Konstruktor class
         public TopologicalSort(Dictionary<string, Course> _courses)
         {
             courses = _courses;
         }
 
+        // Pembuatan solusi menggunakan pendekatan DFS
         public List<Tuple<string, int, int>> GenerateSolutionDFS()
         {
+            // Membuat representasi adjacency list dari courses
             Dictionary<string, List<string>> adj_list = GenerateAdjList();
+
+            // Membuat dictionary untuk menandakan node yang sudah dikunjungi
             Dictionary<string, bool> visited = new Dictionary<string, bool>();
+
+            // Membuat list course yang tidak punya prerequisite sebagai matakulaih awal
             List<string> start_courses = GetStartCourses();
+
+            // Membuat list berisikan tahapan solusi
             List<Tuple<string, int, int>> solution = new List<Tuple<string, int, int>>();
+
+            // Membuat list berisikan urutan dari topological sort (berdasarkan finish time)
+            List<Tuple<string, int, int>> semester = new List<Tuple<string, int, int>>();
+
+            // Inisialisasi timestamp
             int cur_timestamp = 0;
 
+            // Fungsi helper
             void _GenerateSolutionDFS(string course_name)
             {
                 cur_timestamp++;
+
                 int time_start = cur_timestamp;
+                solution.Add(new Tuple<string, int, int>(course_name, time_start, -1));
+
                 visited[course_name] = true;
+
+                // Mengunjungi seluruh neighbour dari course_name
                 foreach (string neighbour in adj_list[course_name])
                 {
                     if (!visited.ContainsKey(neighbour))
@@ -54,94 +77,138 @@ namespace susunkuliah
                         _GenerateSolutionDFS(neighbour);
                     }
                 }
+
                 cur_timestamp++;
+
                 int time_finish = cur_timestamp;
+                semester.Add(new Tuple<string, int, int>(course_name, time_start, time_finish));
                 solution.Add(new Tuple<string, int, int>(course_name, time_start, time_finish));
             }
 
+            // Memanggil helper function untuk setiap course pada start_courses
             foreach (string course_name in start_courses)
             {
                 _GenerateSolutionDFS(course_name);
             }
 
-            solution.Reverse();
+            // Membalik urutan list semester untuk mendapatkan list yang terurut menurun (sesuai finish time)
+            semester.Reverse();
 
-            foreach (var sol in solution)
+            // Menghitung kapan (dalam semester) setiap mata kuliah sebaiknya diambil
+            foreach (var sol in semester)
             {
                 string course_name = sol.Item1;
+                // Mendapatkan semester tertinggi yang dimiliki seluruh prerequisite course_name
                 int highest_semester = GetHighestPrerequisiteSemester(course_name);
                 courses[course_name].semester = highest_semester + 1;
                 courses[course_name].time_begin = sol.Item2;
                 courses[course_name].time_finish = sol.Item3;
-                Console.Write(course_name);
-                Console.Write(" => Semester ");
-                Console.WriteLine(courses[course_name].semester);
             }
 
             return solution;
         }
 
-        public List<List <string> > GenerateSolutionBFS() {
+        // Pembuatan solusi menggunakan pendekatan BFS
+        public List<List<string>> GenerateSolutionBFS()
+        {
+            // Membuat representasi adjacency list dari courses
             Dictionary<string, List<string>> adj = GenerateAdjList();
+
+            // Membuat dictionary untuk merepresentasikan jumlah course
+            // prerequisite yang belum diambil tiap mata kuliah
             Dictionary<string, int> counter = new Dictionary<string, int>();
+
+            // Membuat list yang menampung mata kuliah yang diambil pada semester
             List<string> deliminator = new List<string>();
-            List<List <string> > solution = new List<List <string> >();
+
+            // Membuat list menampung solusi
+            List<List<string>> solution = new List<List<string>>();
+
             bool end = false;
             bool continuity = true;
 
+            // Menghitung jumlah prerequisite tiap matakuliah
             counter = fillCounter(adj);
 
-            while (!end && continuity) {
+            // Melakukan looping hingga matakuliah habis diambil
+            while (!end && continuity)
+            {
                 end = true;
                 continuity = false;
-                foreach (var item in counter) {
-                    deliminator.Clear();
-                    if (item.Value == 0) {
+                deliminator.Clear();
+
+                // Melakukan traversal terhadap counter
+                foreach (var item in counter)
+                {
+                    // Jika mata kuliah tidak memiliki prerequisite, maka akan
+                    // ditambahkan ke deliminator
+                    if (item.Value == 0)
+                    {
                         continuity = true;
                         deliminator.Add(item.Key);
                     }
-                    else {
+                    else
+                    {
                         end = false;
                     }
                 }
 
-                if (!continuity && !end) {
-                    //ERROR
+                if (!continuity && !end)
+                {
+                    // ERROR
                 }
-                else {
-                    foreach (var vertice in deliminator) {
-                        if (counter.ContainsKey(vertice)) {
-                            foreach (var target in adj[vertice]) {
+                else
+                {
+                    // Mengurangi jumlah prerequisite seluruh matkul yang mempunyai
+                    // prerequsite mata kulaih yang ada di deliminator
+                    foreach (var vertice in deliminator)
+                    {
+                        if (counter.ContainsKey(vertice))
+                        {
+                            foreach (var target in adj[vertice])
+                            {
                                 counter[target]--;
                             }
                             counter.Remove(vertice);
                         }
                     }
 
-                    solution.Add(new List<string> (deliminator));
+                    // Menambahkan deliminator ke solusi
+                    solution.Add(new List<string>(deliminator));
                 }
             }
+
             return solution;
         }
 
-        public Dictionary<string, int> fillCounter(Dictionary<string, List<string>> adj) {
+        // Menghasilkan dictionary berisikan jumlah prerequsite dari seluruh matkul
+        public Dictionary<string, int> fillCounter(Dictionary<string, List<string>> adj)
+        {
             Dictionary<string, int> counter = new Dictionary<string, int>();
-            foreach (var item in adj) {
-                if (!counter.ContainsKey(item.Key)) {
+
+            foreach (var item in adj)
+            {
+                if (!counter.ContainsKey(item.Key))
+                {
                     counter.Add(item.Key, 0);
                 }
-                for (int i = 0; i < item.Value.Count; i++) {
-                    if (counter.ContainsKey(item.Value[i])) {
+                for (int i = 0; i < item.Value.Count; i++)
+                {
+                    if (counter.ContainsKey(item.Value[i]))
+                    {
                         counter[item.Value[i]]++;
                     }
-                    else {
+                    else
+                    {
                         counter.Add(item.Value[i], 1);
                     }
                 }
             }
-            return counter;          
+
+            return counter;
         }
 
+        // Membuat representasi adjacency list dari courses
         public Dictionary<string, List<string>> GenerateAdjList()
         {
             Dictionary<string, List<string>> adj_list = new Dictionary<string, List<string>>();
@@ -168,6 +235,7 @@ namespace susunkuliah
             return adj_list;
         }
 
+        // Membuat list course tanpa prerequisite
         public List<string> GetStartCourses()
         {
             List<string> start_courses = new List<string>();
@@ -183,7 +251,9 @@ namespace susunkuliah
             return start_courses;
         }
 
-        public int GetHighestPrerequisiteSemester(string course_name) {
+        // Menghasilkan semester tertinggi dari seluruh prerequisite sebuah matkul
+        public int GetHighestPrerequisiteSemester(string course_name)
+        {
             int mx = 0;
 
             foreach (var preq in courses[course_name].prerequisites)
@@ -234,8 +304,24 @@ namespace susunkuliah
         }
 
         public void Run() {
+            Console.WriteLine("SEBELOM:");
+            foreach (var x in courses)
+            {
+                Console.Write(x.Key);
+                Console.Write(" => semester ");
+                Console.WriteLine(x.Value.semester);
+            }
+
             TopologicalSort youngG = new TopologicalSort(courses);
             List<Tuple<string, int, int>> solution = youngG.GenerateSolutionDFS();
+
+            Console.WriteLine("SESUDAH:");
+            foreach (var x in courses)
+            {
+                Console.Write(x.Key);
+                Console.Write(" => semester ");
+                Console.WriteLine(x.Value.semester);
+            }
 
             foreach (var x in solution)
             {
