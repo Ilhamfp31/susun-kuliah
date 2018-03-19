@@ -81,6 +81,67 @@ namespace susunkuliah
             return solution;
         }
 
+        public List<List <string> > GenerateSolutionBFS() {
+            Dictionary<string, List<string>> adj = GenerateAdjList();
+            Dictionary<string, int> counter = new Dictionary<string, int>();
+            List<string> deliminator = new List<string>();
+            List<List <string> > solution = new List<List <string> >();
+            bool end = false;
+            bool continuity = true;
+
+            counter = fillCounter(adj);
+
+            while (!end && continuity) {
+                end = true;
+                continuity = false;
+                foreach (var item in counter) {
+                    deliminator.Clear();
+                    if (item.Value == 0) {
+                        continuity = true;
+                        deliminator.Add(item.Key);
+                    }
+                    else {
+                        end = false;
+                    }
+                }
+
+                if (!continuity && !end) {
+                    //ERROR
+                }
+                else {
+                    foreach (var vertice in deliminator) {
+                        if (counter.ContainsKey(vertice)) {
+                            foreach (var target in adj[vertice]) {
+                                counter[target]--;
+                            }
+                            counter.Remove(vertice);
+                        }
+                    }
+
+                    solution.Add(new List<string> (deliminator));
+                }
+            }
+            return solution;
+        }
+
+        public Dictionary<string, int> fillCounter(Dictionary<string, List<string>> adj) {
+            Dictionary<string, int> counter = new Dictionary<string, int>();
+            foreach (var item in adj) {
+                if (!counter.ContainsKey(item.Key)) {
+                    counter.Add(item.Key, 0);
+                }
+                for (int i = 0; i < item.Value.Count; i++) {
+                    if (counter.ContainsKey(item.Value[i])) {
+                        counter[item.Value[i]]++;
+                    }
+                    else {
+                        counter.Add(item.Value[i], 1);
+                    }
+                }
+            }
+            return counter;          
+        }
+
         public Dictionary<string, List<string>> GenerateAdjList()
         {
             Dictionary<string, List<string>> adj_list = new Dictionary<string, List<string>>();
