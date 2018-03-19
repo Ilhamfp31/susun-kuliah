@@ -11,6 +11,7 @@ using System.Linq;
 
 namespace SusunKuliah
 {
+    // Class course untuk merepresentasikan mata kuliah pada persoalan
     public class Course
     {
         public string name;
@@ -32,30 +33,50 @@ namespace SusunKuliah
         }
     }
 
+    // Class TopologicalSort sebagai algoritma utama
     class TopologicalSort
     {
+        // courses berisikan matakuliah serta prerequisitenya
         Dictionary<string, Course> courses;
 
+        // Konstruktor class
         public TopologicalSort(Dictionary<string, Course> _courses)
         {
             courses = _courses;
         }
 
+        // Pembuatan solusi menggunakan pendekatan DFS
         public List<Tuple<string, int, int>> GenerateSolutionDFS()
         {
+            // Membuat representasi adjacency list dari courses
             Dictionary<string, List<string>> adj_list = GenerateAdjList();
+
+            // Membuat dictionary untuk menandakan node yang sudah dikunjungi
             Dictionary<string, bool> visited = new Dictionary<string, bool>();
+
+            // Membuat list course yang tidak punya prerequisite sebagai matakulaih awal
             List<string> start_courses = GetStartCourses();
+
+            // Membuat list berisikan tahapan solusi
             List<Tuple<string, int, int>> solution = new List<Tuple<string, int, int>>();
+
+            // Membuat list berisikan urutan dari topological sort (berdasarkan finish time)
             List<Tuple<string, int, int>> semester = new List<Tuple<string, int, int>>();
+
+            // Inisialisasi timestamp
             int cur_timestamp = 0;
 
+            // Fungsi helper
             void _GenerateSolutionDFS(string course_name)
             {
                 cur_timestamp++;
+
                 int time_start = cur_timestamp;
                 solution.Add(new Tuple<string, int, int>(course_name, time_start, -1));
+
                 visited[course_name] = true;
+
+                // Mengunjungi seluruh neighbour dari course_name
                 foreach (string neighbour in adj_list[course_name])
                 {
                     if (!visited.ContainsKey(neighbour))
@@ -63,59 +84,71 @@ namespace SusunKuliah
                         _GenerateSolutionDFS(neighbour);
                     }
                 }
+
                 cur_timestamp++;
+
                 int time_finish = cur_timestamp;
                 semester.Add(new Tuple<string, int, int>(course_name, time_start, time_finish));
                 solution.Add(new Tuple<string, int, int>(course_name, time_start, time_finish));
             }
 
+            // Memanggil helper function untuk setiap course pada start_courses
             foreach (string course_name in start_courses)
             {
                 _GenerateSolutionDFS(course_name);
             }
 
+            // Membalik urutan list semester untuk mendapatkan list yang terurut menurun (sesuai finish time)
             semester.Reverse();
 
+            // Menghitung kapan (dalam semester) setiap mata kuliah sebaiknya diambil
             foreach (var sol in semester)
             {
                 string course_name = sol.Item1;
+                // Mendapatkan semester tertinggi yang dimiliki seluruh prerequisite course_name
                 int highest_semester = GetHighestPrerequisiteSemester(course_name);
                 courses[course_name].semester = highest_semester + 1;
                 courses[course_name].time_begin = sol.Item2;
                 courses[course_name].time_finish = sol.Item3;
-                Console.Write(course_name);
-                Console.Write(" => Semester ");
-                Console.WriteLine(courses[course_name].semester);
             }
 
             return solution;
         }
 
+        // Pembuatan solusi menggunakan pendekatan BFS
         public List<List<string>> GenerateSolutionBFS()
         {
+            // Membuat representasi adjacency list dari courses
             Dictionary<string, List<string>> adj = GenerateAdjList();
+
+            // Membuat dictionary untuk merepresentasikan jumlah course
+            // prerequisite yang belum diambil tiap mata kuliah
             Dictionary<string, int> counter = new Dictionary<string, int>();
+
+            // Membuat list yang menampung mata kuliah yang diambil pada semester
             List<string> deliminator = new List<string>();
+
+            // Membuat list menampung solusi
             List<List<string>> solution = new List<List<string>>();
+
             bool end = false;
             bool continuity = true;
 
-            counter = fillCounter();
+            // Menghitung jumlah prerequisite tiap matakuliah
+            counter = fillCounter(adj);
 
-            foreach (var x in counter)
-            {
-                Console.Write(x.Key);
-                Console.Write(" : ");
-                Console.WriteLine(x.Value);
-            }
-
+            // Melakukan looping hingga matakuliah habis diambil
             while (!end && continuity)
             {
                 end = true;
                 continuity = false;
                 deliminator.Clear();
+
+                // Melakukan traversal terhadap counter
                 foreach (var item in counter)
                 {
+                    // Jika mata kuliah tidak memiliki prerequisite, maka akan
+                    // ditambahkan ke deliminator
                     if (item.Value == 0)
                     {
                         continuity = true;
@@ -129,10 +162,12 @@ namespace SusunKuliah
 
                 if (!continuity && !end)
                 {
-                    //ERROR
+                    // ERROR
                 }
                 else
                 {
+                    // Mengurangi jumlah prerequisite seluruh matkul yang mempunyai
+                    // prerequsite mata kulaih yang ada di deliminator
                     foreach (var vertice in deliminator)
                     {
                         if (counter.ContainsKey(vertice))
@@ -145,6 +180,7 @@ namespace SusunKuliah
                         }
                     }
 
+                    // Menambahkan deliminator ke solusi
                     solution.Add(new List<string>(deliminator));
                 }
             }
@@ -152,10 +188,11 @@ namespace SusunKuliah
             return solution;
         }
 
-        public Dictionary<string, int> fillCounter()
+        // Menghasilkan dictionary berisikan jumlah prerequsite dari seluruh matkul
+        public Dictionary<string, int> fillCounter(Dictionary<string, List<string>> adj)
         {
-            Dictionary<string, List<string>> adj = GenerateAdjList();
             Dictionary<string, int> counter = new Dictionary<string, int>();
+
             foreach (var item in adj)
             {
                 if (!counter.ContainsKey(item.Key))
@@ -174,9 +211,11 @@ namespace SusunKuliah
                     }
                 }
             }
+
             return counter;
         }
 
+        // Membuat representasi adjacency list dari courses
         public Dictionary<string, List<string>> GenerateAdjList()
         {
             Dictionary<string, List<string>> adj_list = new Dictionary<string, List<string>>();
@@ -203,6 +242,7 @@ namespace SusunKuliah
             return adj_list;
         }
 
+        // Membuat list course tanpa prerequisite
         public List<string> GetStartCourses()
         {
             List<string> start_courses = new List<string>();
@@ -218,6 +258,7 @@ namespace SusunKuliah
             return start_courses;
         }
 
+        // Menghasilkan semester tertinggi dari seluruh prerequisite sebuah matkul
         public int GetHighestPrerequisiteSemester(string course_name)
         {
             int mx = 0;
@@ -234,248 +275,23 @@ namespace SusunKuliah
         }
     }
 
-    public class GraphNew
-    {
-        Dictionary<string, Course> courses;
 
-        public GraphNew()
-        {
-            courses = new Dictionary<string, Course>();
-
-            // Hard code for testing purposes
-            Course C1 = new Course("C1");
-            C1.AddPrerequisite("C3");
-            courses["C1"] = C1;
-            //courses.Add(C1);
-
-            Course C2 = new Course("C2");
-            C2.AddPrerequisite("C1");
-            C2.AddPrerequisite("C4");
-            courses["C2"] = C2;
-            //courses.Add(C2);
-
-            Course C3 = new Course("C3");
-            courses["C3"] = C3;
-            //courses.Add(C3);
-
-            Course C4 = new Course("C4");
-            C4.AddPrerequisite("C1");
-            C4.AddPrerequisite("C3");
-            courses["C4"] = C4;
-            //courses.Add(C4);
-
-            Course C5 = new Course("C5");
-            C5.AddPrerequisite("C2");
-            C5.AddPrerequisite("C4");
-            courses["C5"] = C5;
-            //courses.Add(C5);
-        }
-
-        public void Run()
-        {
-            TopologicalSort youngG = new TopologicalSort(courses);
-            List<Tuple<string, int, int>> solution = youngG.GenerateSolutionDFS();
-
-            foreach (var x in solution)
-            {
-                Console.WriteLine(x.ToString());
-            }
-        }
-
-    }
-
-    public class Graph
-    {
-        Dictionary<string, List<string>> adj = new Dictionary<string, List<string>>();
-        Dictionary<string, bool> visited = new Dictionary<string, bool>();
-        List<string> start_vertices = new List<string>();
-        List<string> solution = new List<string>();
-        int cur_timestamp = 0;
-
-        //Dictionary<string, List<string>> preq;
-
-        public Graph()
-        {
-            adj["C1"] = new List<string>();
-            adj["C2"] = new List<string>();
-            adj["C3"] = new List<string>();
-            adj["C4"] = new List<string>();
-            adj["C5"] = new List<string>();
-
-            addEdge("C1", "C2");
-            addEdge("C4", "C2");
-
-            addEdge("C1", "C4");
-            addEdge("C3", "C4");
-
-            addEdge("C2", "C5");
-            addEdge("C4", "C5");
-
-            // addEdge("C2", "C3");
-            // addEdge("C3", "C4");
-            // adj["C4"] = new List<string>();
-
-            start_vertices.Add("C3");
-            start_vertices.Add("C1");
-
-            // DFS
-            TopologicalSortDFS();
-
-            //Console.WriteLine("\n");
-
-            // BFS
-            //List<List<String>> ans = TopologicalSortBFS();
-
-            //foreach (var x in ans) {
-            //    foreach (var y in x) {
-            //        Console.Write(y);
-            //        Console.Write(" ");
-            //    }
-            //    Console.WriteLine("");
-            //}
-        }
-
-        public void addEdge(string key, string value)
-        {
-            if (adj.ContainsKey(key))
-            {
-                adj[key].Add(value);
-            }
-            else
-            {
-                adj.Add(key, new List<string> { value });
-            }
-        }
-
-        public void _TopologicalSortDFS(string vertice)
-        {
-            cur_timestamp++;
-            visited[vertice] = true;
-            foreach (string neighbour in adj[vertice])
-            {
-                if (!visited.ContainsKey(neighbour))
-                {
-                    _TopologicalSortDFS(neighbour);
-                }
-            }
-            cur_timestamp++;
-            Console.Write(vertice);
-            Console.Write(" ");
-            Console.WriteLine(cur_timestamp);
-            solution.Add(vertice);
-        }
-
-        public List<string> TopologicalSortDFS()
-        {
-            cur_timestamp = 0;
-            solution = new List<string>();
-            visited = new Dictionary<string, bool>();
-            foreach (string vertice in start_vertices)
-            {
-                _TopologicalSortDFS(vertice);
-            }
-            int len = solution.Count;
-            for (int i = 0; i < len / 2; i++)
-            {
-                string temp = solution[i];
-                solution[i] = solution[len - i - 1];
-                solution[len - i - 1] = temp;
-            }
-            return solution;
-        }
-
-        public List<List<string>> TopologicalSortBFS()
-        {
-            Dictionary<string, int> counter = new Dictionary<string, int>();
-            List<string> deliminator = new List<string>();
-            List<List<string>> output = new List<List<string>>();
-            bool end = false;
-            bool continuity = true;
-
-            counter = fillCounter();
-
-            while (!end && continuity)
-            {
-                end = true;
-                continuity = false;
-                foreach (var item in counter)
-                {
-                    if (item.Value == 0)
-                    {
-                        continuity = true;
-                        deliminator.Add(item.Key);
-                    }
-                    else
-                    {
-                        end = false;
-                    }
-                }
-
-                if (!continuity && !end)
-                {
-                    //ERROR
-                }
-                else
-                {
-                    foreach (var vertice in deliminator)
-                    {
-                        if (counter.ContainsKey(vertice))
-                        {
-                            foreach (var target in adj[vertice])
-                            {
-                                counter[target]--;
-                            }
-                            counter.Remove(vertice);
-                        }
-                    }
-
-                    output.Add(new List<string>(deliminator));
-                }
-            }
-            return output;
-        }
-
-        public Dictionary<string, int> fillCounter()
-        {
-            Dictionary<string, int> counter = new Dictionary<string, int>();
-            foreach (var item in adj)
-            {
-                if (!counter.ContainsKey(item.Key))
-                {
-                    counter.Add(item.Key, 0);
-                }
-                for (int i = 0; i < item.Value.Count; i++)
-                {
-                    if (counter.ContainsKey(item.Value[i]))
-                    {
-                        counter[item.Value[i]]++;
-                    }
-                    else
-                    {
-                        counter.Add(item.Value[i], 1);
-                    }
-                }
-            }
-            return counter;
-        }
-
-    }
-
+    // Window utama visualizer
     public partial class MainWindow : Window
     {
         // Buat OpenFileDialog
         Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
 
-        //Check file sudah dipilih atau belum
+        // Check file sudah dipilih atau belum
         Nullable<bool> result;
 
-        //Counter gambar
+        // Counter gambar
         int counterGambarTampil = 0;
 
-        //Set PesanSemester
+        // Set PesanSemester
         string PesanSemester = "";
         
-        //List Gambar
+        // List Gambar
         List<BitmapImage> listGambar = new List<BitmapImage>();
 
         public MainWindow()
@@ -483,7 +299,7 @@ namespace SusunKuliah
             InitializeComponent();
         }
 
-        //Button untuk ambil file
+        // Button untuk ambil file
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             // Set filter untuk file extension dan default file extension 
@@ -505,11 +321,11 @@ namespace SusunKuliah
         //Button untuk susun kuliah
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            //Inisialisasi map kuliah
+            // Inisialisasi map kuliah
             Dictionary<string, List<string>> mapKuliah = new Dictionary<string, List<string>>();
             Dictionary<string, Course> courses = new Dictionary<string, Course>();
 
-            //Cek file sudah didapat atau belum
+            // Cek file sudah didapat atau belum
             if (result == true)
             {
                 //Jika file sudah didapat, baca.
@@ -564,22 +380,20 @@ namespace SusunKuliah
 
                 //Graph untuk digambar.
                 Microsoft.Msagl.Drawing.Graph graph = new Microsoft.Msagl.Drawing.Graph("");
-                //Masukan graph yang sudah dibaca.
                 foreach (KeyValuePair<string, List<string>> entry in mapKuliah)
                 {
                     for (int i = 0; i < entry.Value.Count; ++i)
                     {
                         graph.AddEdge(entry.Value[i], entry.Key);
-                        //Console.WriteLine("Key = {0}, Value = {1}", entry.Key, entry.Value[i]);
                     }
                 }
-                //Gambar graph awal step by step
                 Microsoft.Msagl.GraphViewerGdi.GraphRenderer renderer = new Microsoft.Msagl.GraphViewerGdi.GraphRenderer(graph);
                 renderer.CalculateLayout();
                 int width = 250;
                 Bitmap bitmap = new Bitmap(width, (int)(graph.Height * (width / graph.Width)), PixelFormat.Format32bppPArgb);
                 renderer.Render(bitmap);
-                //Masukan gambar ke dalam list gambar
+
+                //Masukan gambar graph awal ke dalam list gambar
                 listGambar.Add(BitmapToImageSource(bitmap));
 
                 //Tampilkan gambar pertama
@@ -587,58 +401,44 @@ namespace SusunKuliah
 
                 TopologicalSort topo = new TopologicalSort(courses);
 
-                //Cek pilihan sort
-                if (rdBtnDFS.IsChecked == true)
+                // Mengecek pilihan radio button (DFS / BFS)
+                if (rdBtnDFS.IsChecked == true) // Saat DFS dipilih
                 {
+                    // Generate solusi menggunakan topological sort DFS
                     List<Tuple<string, int, int>> dfs = topo.GenerateSolutionDFS();
 
-                    foreach (var x in dfs)
-                    {
-                        Console.WriteLine(x.ToString());
-                    }
-
-                    // dfs = dfs.OrderByDescending(t => t.Item2).ToList();
-
-
-                    //Graph untuk digambar.
-                    //Microsoft.Msagl.Drawing.Graph graph = new Microsoft.Msagl.Drawing.Graph("");
-                    //Masukan graph yang sudah dibaca.
-
+                    // Membuat step-by-step pemrosesan graph
                     foreach (Tuple<string, int, int> entry in dfs)
                     {
-                        if (entry.Item3 == -1)
+                        if (entry.Item3 == -1) // Saat node yang dikunjungi baru masuk/start
                         {
+                            // Set warna node yang baru dikunjungi dengan warna merah serta membarikan timestamp start
                             graph.FindNode(entry.Item1).Attr.FillColor = Microsoft.Msagl.Drawing.Color.Red;
                             graph.FindNode(entry.Item1).LabelText = graph.FindNode(entry.Item1).LabelText + " " + entry.Item2 + "/";
-                            //Gambar graph awal step by step
-                            renderer = new Microsoft.Msagl.GraphViewerGdi.GraphRenderer(graph);
-                            renderer.CalculateLayout();
-                            width = 250;
-                            bitmap = new Bitmap(width, (int)(graph.Height * (width / graph.Width)), PixelFormat.Format32bppPArgb);
-                            renderer.Render(bitmap);
-                            //Masukan gambar ke dalam list gambar
-                            listGambar.Add(BitmapToImageSource(bitmap));
                         }
-                        else
+                        else // Saat node yang dikunjungi sudah selesai / finish
                         {
+                            // Set warna node yang selesai dikunjungi dengan warna biru serta membarikan timestamp start dan finish
                             graph.FindNode(entry.Item1).Attr.FillColor = Microsoft.Msagl.Drawing.Color.Blue;
                             graph.FindNode(entry.Item1).LabelText = graph.FindNode(entry.Item1).LabelText + entry.Item3;
-                            //Gambar graph awal step by step
-                            renderer = new Microsoft.Msagl.GraphViewerGdi.GraphRenderer(graph);
-                            renderer.CalculateLayout();
-                            width = 250;
-                            bitmap = new Bitmap(width, (int)(graph.Height * (width / graph.Width)), PixelFormat.Format32bppPArgb);
-                            renderer.Render(bitmap);
-                            //Masukan gambar ke dalam list gambar
-                            listGambar.Add(BitmapToImageSource(bitmap));
                         }
 
+                        // Membuat renderer untuk graph
+                        renderer = new Microsoft.Msagl.GraphViewerGdi.GraphRenderer(graph);
+                        renderer.CalculateLayout();
+                        width = 250;
+                        bitmap = new Bitmap(width, (int)(graph.Height * (width / graph.Width)), PixelFormat.Format32bppPArgb);
+                        renderer.Render(bitmap);
 
+                        // Memasukan rendered graph ke list graph untuk keperluan visualisasi step-by-step
+                        listGambar.Add(BitmapToImageSource(bitmap));
                     }
 
-                    //Tambahkan pesan akhir ke PesanSemester
+                    // Generate pesan untuk visualisasi informasi matakuliah yang diambil per semester
                     int counterSemester = 0;
                     int maxSemester = 0;
+
+                    // Mencari semester maksimum pada seluruh mata kuliah
                     foreach (var x in courses)
                     {
                         if (x.Value.semester > maxSemester)
@@ -646,10 +446,13 @@ namespace SusunKuliah
                             maxSemester = x.Value.semester;
                         }
                     }
+
+                    // Membuat dan mengisi list matakuliah berdasarkan semester
                     List<List<string>> semesterList = new List<List<string>>();
                     for (int i = 0; i < maxSemester; i++) {
                         semesterList.Add(new List<string>());
                     }
+
                     foreach (var x in courses)
                     {
                         foreach (var y in x.Value.prerequisites)
@@ -657,6 +460,8 @@ namespace SusunKuliah
                             semesterList[x.Value.semester - 1].Add(y);   
                         }
                     }
+
+                    // Generate string informasi matakuliah per semester
                     foreach (var x in semesterList)
                     {
                         counterSemester++;
@@ -673,31 +478,32 @@ namespace SusunKuliah
                     }
 
                 }
-                else if (rdBtnBFS.IsChecked == true)
+                else if (rdBtnBFS.IsChecked == true) // Saat BFS dipilih
                 {
-                    
-                    //Mulai BFS
+                    // Generate solusi menggunakan pendekatan topological sort BFS
                     List<List<string>> bfs = topo.GenerateSolutionBFS();
-                    
+
+                    // Membuat visualisasi graph secara step-by-step
                     foreach (var x in bfs)
                     {
+                        // Mewarnai node yang sudah dipilih dengan warna biru
                         foreach (var entry in x)
                         {
                             graph.FindNode(entry).Attr.FillColor = Microsoft.Msagl.Drawing.Color.Blue;
-                     
-                            //Gambar graph awal step by step
-                        
                         }
+
+                        // Membuat renderer untuk graph
                         renderer = new Microsoft.Msagl.GraphViewerGdi.GraphRenderer(graph);
                         renderer.CalculateLayout();
                         width = 250;
                         bitmap = new Bitmap(width, (int)(graph.Height * (width / graph.Width)), PixelFormat.Format32bppPArgb);
                         renderer.Render(bitmap);
-                        //Masukan gambar ke dalam list gambar
+
+                        // Memasukan gambar ke dalam list gambar
                         listGambar.Add(BitmapToImageSource(bitmap));
                     }
 
-                    //Tambahkan pesan akhir ke PesanSemester
+                    // Generate string berisi informasi matakuliah yang diambil tiap semester
                     int counterSemester = 0;
                     foreach (var x in bfs)
                     {
@@ -716,14 +522,14 @@ namespace SusunKuliah
                 }
                 else
                 {
-                    //Jika tipe sort belum dipilih munculkan pesan error.
+                    // Jika tipe sort belum dipilih munculkan pesan error.
                     System.Windows.MessageBox.Show("Mohon pilih salah satu tipe topological sort (DFS/BFS).");
                 }
 
             }
             else
             {
-                //Jika file belum didapat munculkan pesan error.
+                // Jika file belum didapat munculkan pesan error.
                 System.Windows.MessageBox.Show("Mohon masukkan file input.");
             }
 
@@ -733,7 +539,6 @@ namespace SusunKuliah
         //Button tunjukan selanjutnya
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            
             if (counterGambarTampil == listGambar.Count - 1) {
                 ImageBox1.Opacity = 0.0;
                 TextBox2.Opacity = 100.0;
@@ -750,7 +555,7 @@ namespace SusunKuliah
             
         }
 
-        //Ubah bitmap ke bitmapimage agar dapat ditampilkan
+        // Ubah bitmap ke bitmapimage agar dapat ditampilkan
         BitmapImage BitmapToImageSource(Bitmap bitmap)
         {
             using (MemoryStream memory = new MemoryStream())
