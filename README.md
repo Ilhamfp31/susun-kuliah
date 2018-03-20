@@ -1,4 +1,6 @@
-# Susun-Kuliah
+Susun-Kuliah: A college courses scheduler app for IF2211 - Institut Teknologi Bandung
+=================
+
 Aplikasi penggunaan algoritma DFS dan BFS untuk menyusun pilihan kuliah mahasiswa. 
 
 #Cara Penggunaan
