@@ -290,20 +290,24 @@ namespace SusunKuliah
         // Counter gambar
         int counterGambarTampil = 0;
 
-        // Set PesanSemester
+        // Buat string pesan semester. Pesan yang akan disampaikan di akhir program nanti.
         string PesanSemester = "";
 
-        // List Gambar
+        // List Gambar untuk ditampilkan.
         List<BitmapImage> listGambar = new List<BitmapImage>();
 
 
         public MainWindow()
         {
-
+            // Splash screen untuk ditampilkan diawal program.
             SplashScreen splashScreen = new SplashScreen("SusunKuliahIcon.ico");
             splashScreen.Show(true);
             System.Threading.Thread.Sleep(500);
+
+            //Mulai program
             InitializeComponent();
+
+            //Set agar sistem dapat mencari .dll ketika runtime.
             AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
             {
                 Assembly thisAssembly = Assembly.GetEntryAssembly();
@@ -321,6 +325,8 @@ namespace SusunKuliah
                 }
 
             };
+            
+            //Set background dengan gambar di resource.
             this.Background = new System.Windows.Media.ImageBrush(new BitmapImage(new Uri(@"pack://application:,,,/bg1.jpg")));
 
         }
@@ -331,7 +337,6 @@ namespace SusunKuliah
             // Set filter untuk file extension dan default file extension 
             dlg.DefaultExt = ".txt";
             dlg.Filter = "TXT Files (*.txt)|*.txt";
-
 
             // Munculkan OpenFileDialog dengan memanggil method ShowDialog  
             result = dlg.ShowDialog();
@@ -357,18 +362,25 @@ namespace SusunKuliah
                 //Jika file sudah didapat, baca.
                 using (StreamReader sr = new StreamReader(TextBox1.Text))
                 {
+                    // Buat kode kuliah, string yang dibaca dari file.
                     string kodeKuliah = string.Empty;
+
+                    // Baca file hingga selesai.
                     while ((kodeKuliah = sr.ReadLine()) != null)
                     {
+                        //Buat 2 string. Satu untuk mata kuliah yang pertama dibaca. Satu lagi untuk semua prerequisitenya.
                         string kodeKuliahMasukan = string.Empty;
                         string kodeKuliahDitunjuk = string.Empty;
                         bool sudahDapatAwal = false;
                         for (int i = 0; i < kodeKuliah.Length; ++i)
                         {
+                            //Cek apakah sudah didapat mata kuliah yang pertama dibaca.
                             if (!sudahDapatAwal)
                             {
+                                //Jika belum ada, baca hingga koma atau titik.
                                 if (kodeKuliah[i] == ',' || kodeKuliah[i] == '.')
                                 {
+                                    //Ambil
                                     kodeKuliahDitunjuk = Regex.Replace(kodeKuliahMasukan, @"\s+", String.Empty);
                                     courses[kodeKuliahDitunjuk] = new Course(kodeKuliahDitunjuk);
                                     kodeKuliahMasukan = string.Empty;
@@ -376,15 +388,20 @@ namespace SusunKuliah
                                 }
                                 else
                                 {
+                                    //Tambahkan karakter
                                     kodeKuliahMasukan += kodeKuliah[i];
                                 }
                             }
                             else
                             {
+                                //Jika sudah ada, baca terus tiap prereq hingga koma atau titik.
                                 if (kodeKuliah[i] == ',' || kodeKuliah[i] == '.')
                                 {
+                                    // Ambil
                                     kodeKuliahMasukan = Regex.Replace(kodeKuliahMasukan, @"\s+", String.Empty);
                                     courses[kodeKuliahDitunjuk].AddPrerequisite(kodeKuliahMasukan);
+
+                                    //Cek sudah ada atau belum di map.
                                     if (mapKuliah.ContainsKey(kodeKuliahDitunjuk))
                                     {
                                         mapKuliah[kodeKuliahDitunjuk].Add(kodeKuliahMasukan);
@@ -397,6 +414,7 @@ namespace SusunKuliah
                                 }
                                 else
                                 {
+                                    //Tambah karakter
                                     kodeKuliahMasukan += kodeKuliah[i];
                                 }
                             }
@@ -406,6 +424,8 @@ namespace SusunKuliah
 
                 //Graph untuk digambar.
                 Microsoft.Msagl.Drawing.Graph graph = new Microsoft.Msagl.Drawing.Graph("");
+
+                //Baca graph di mapKuliah, masukan ke graph.
                 foreach (KeyValuePair<string, List<string>> entry in mapKuliah)
                 {
                     for (int i = 0; i < entry.Value.Count; ++i)
@@ -413,6 +433,8 @@ namespace SusunKuliah
                         graph.AddEdge(entry.Value[i], entry.Key);
                     }
                 }
+
+                //Gambar kondisi graph sekarang, render ke bitmap.
                 Microsoft.Msagl.GraphViewerGdi.GraphRenderer renderer = new Microsoft.Msagl.GraphViewerGdi.GraphRenderer(graph);
                 renderer.CalculateLayout();
                 int width = 250;
@@ -425,6 +447,7 @@ namespace SusunKuliah
                 //Tampilkan gambar pertama
                 ImageBox1.Source = listGambar[counterGambarTampil];
 
+                // Buat TopologicalSource dengan masukan courses
                 TopologicalSort topo = new TopologicalSort(courses);
 
                 // Mengecek pilihan radio button (DFS / BFS)
@@ -596,7 +619,7 @@ namespace SusunKuliah
             }
         }
 
-
+        // Button About
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
             System.Windows.MessageBox.Show("College courses scheduler app for IF2211 - Institut Teknologi Bandung \n\nby\nIlham Firdausi Putra 13516140\nYusuf Rahmat Pratama 13516062\nAhmad Izzan 13516116\n ");
